@@ -85,6 +85,7 @@ public class ExerciciL {
 
          */
 
+
         // 8 - llistat de persones DONA amb lambda (stream)
 
         // 9 - Llistat dels dos HOMES més joves (stream)
