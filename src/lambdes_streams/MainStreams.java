@@ -1,4 +1,4 @@
-package exemples;
+package lambdes_streams;
 
 import java.util.Arrays;
 import java.util.Comparator;

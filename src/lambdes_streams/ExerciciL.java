@@ -1,4 +1,4 @@
-package exemples;
+package lambdes_streams;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

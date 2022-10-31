@@ -1,4 +1,4 @@
-package exemples;
+package lambdes_streams;
 
 public class Cotxe {
     String marca;
