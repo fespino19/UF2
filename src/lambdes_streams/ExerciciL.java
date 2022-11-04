@@ -3,6 +3,7 @@ package lambdes_streams;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExerciciL {
 
@@ -27,44 +28,73 @@ public class ExerciciL {
 
         // 1 - Canviar a lambda
         System.out.println("\n1-2");
-        Collections.sort(llista_persones, new Comparator<Persona>() {
-            @Override
-            public int compare(Persona o1, Persona o2) {
-                if(o1.getNom().charAt(0) >= o2.getNom().charAt(0)) return 1;
-                else return -1;
-            }
-        });
+       // Collections.sort(llista_persones, new Comparator<Persona>() {
+       //     @Override
+       //     public int compare(Persona o1, Persona o2) {
+       //         if(o1.getNom().charAt(0) >= o2.getNom().charAt(0)) return 1;
+       //         else return -1;
+       //     }
+       // });
+        llista_persones.stream().sorted((o1, o2) -> o1.getNom().compareTo(o2.getNom()))
+
+
+
+
+
+
 
         // 2 - Canviar a Lambda
-        for(Persona p: llista_persones) {
-            System.out.println(p);
-        }
+        //for(Persona p: llista_persones) {
+        //    System.out.println(p);
+        //}
+                .forEach(Persona -> System.out.println(Persona));
 
         // 3 - Canvia a classe anònima
         System.out.println("\n3-4");
         //ordenació alfabètica inversa del nom
-            llista_persones.sort((o1,o2) -> o2.getNom().compareTo(o1.getNom()));
+            //llista_persones.sort((o1,o2) -> o2.getNom().compareTo(o1.getNom()));
+        llista_persones.stream().sorted(new Comparator<Persona>() {
+                    @Override
+                    public int compare(Persona o1, Persona o2) {
+                        return o2.getNom().compareTo(o1.getNom());
+                    }
+                })
 
-        // 4 - Canvia per una crida al mètode per referència
-        for(Persona p: llista_persones) {
-            System.out.println(p);
-        };
 
 
-        // 5 - Omplir map. Canviar per un forEach amb lambda
-        for(Persona per : llista_persones) {
-            mapPersones.put(per.getAge(),1);
-        }
 
-        // 6 - Canvia per un recorregut forEach amb lambda
-        System.out.println("\n5");
-        for(Map.Entry entry : mapPersones.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
+
+        // 4 - Canvia per una crida al mètode per referència---
+        //for(Persona p: llista_persones) {
+            //System.out.println(p);
+        //};
+
+        .forEach(System.out::println);
+
+
+
+
+        // 5 - Omplir map. Canviar per un forEach amb lambda----
+        //for(Persona per : llista_persones) {
+            //mapPersones.put(per.getAge(),1);
+        //}
+        System.out.println("\n5 y 6");
+        llista_persones.stream().map(Persona::getAge).distinct().collect(Collectors.toList()).forEach((o1)-> System.out.println(o1+":"+1));
+
+
+
+
+
+        // 6 - Canvia per un recorregut forEach amb lambda+++
+
+        //for(Map.Entry entry : mapPersones.entrySet()) {
+           // System.out.println(entry.getKey() + " : " + entry.getValue());
+       // }
 
 
 
         /* 7 -
+
             Esbrina com s'utilitzen els mètodes de map següents
                 map.putIfAbsent
                 map.computeIfAbsent
@@ -84,26 +114,56 @@ public class ExerciciL {
                 15 anys -> 1
 
          */
+        System.out.println("\n7");
+        llista_persones.forEach(p -> {
+            mapPersones.computeIfPresent(p.getAge(),(k,v) -> v +1);
+            mapPersones.putIfAbsent(p.getAge(),1);
+        });
+
+        mapPersones.forEach((k,v) -> System.out.println(k + " : " + v));
 
 
-        // 8 - llistat de persones DONA amb lambda (stream)
 
-        // 9 - Llistat dels dos HOMES més joves (stream)
+        // 8 - llistat de persones DONA amb lambda (stream)---
+        System.out.println("\n8 DONES");
+        llista_persones.stream().filter(persona -> persona.getGenere().equals(Persona.Genere.DONA)).forEach(System.out::println);
+
+
+        // 9 - Llistat dels dos HOMES més joves (stream)---
+        System.out.println("\n9 Hombres mas Jovenes");
+        llista_persones.stream().filter(persona -> persona.getGenere().equals(Persona.Genere.HOME)).sorted(Comparator.comparing(Persona::getAge)).limit(2).forEach(System.out:: println);
 
         // 10- Esborrar (no filtrar o imprimir) del llistat les persones entre 30 i 40 anys (amb lambda)
+        System.out.println("\n10--borrar personas");
+        List<Persona> novallista = new ArrayList<>();
+        llista_persones.removeIf(persona -> persona.getAge()>30 && persona.getAge()<=40);
+        llista_persones.forEach(System.out::println);
+
+
 
         // 11 - Persones que tinguin una 'a' al seu nom
         System.out.println("\n11 Amb una 'A'");
+        llista_persones.stream().filter(p -> p.getNom().toUpperCase().contains("A")).forEach(System.out::println);
 
         //12 - Llistat de les dates de naixament + dos dies
         System.out.println("\n12 - dates amb dos dies més");
+        llista_persones.stream().map(persona -> persona.getDataNaixament().plusDays(2)).forEach(System.out::println);
 
 
         //13 - Rejovenir dos anys a totes les persones
         System.out.println("\n13 - Rejovenir dos anys a totes les persones");
+        llista_persones.stream().
+                map(persona -> {
+                    persona.setDataNaixament(persona.getDataNaixament().plusYears(2));
+                    return persona;
+                })
+                .forEach(System.out::println);
 
 
     }
 
 
-}
+    }
+
+
+
